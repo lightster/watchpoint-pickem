@@ -1,0 +1,10 @@
+{
+    "name": "watchpoint-io/pickem",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
