@@ -12,7 +12,9 @@ services:
       - php-fpm
 
   php-fpm:
-    image: php:7.1.11-fpm-jessie
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     restart: always
     volumes:
       - .:/var/www/html/watchpoint-io
