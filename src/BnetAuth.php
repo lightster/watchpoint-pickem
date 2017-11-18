@@ -74,7 +74,7 @@ class BnetAuth
 
         try {
             $access_token = $provider->getAccessToken('authorization_code', [
-                'code' => $_GET['code']
+                'code' => $this->code
             ]);
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
             throw new BnetAuthException($e->getMessage());
