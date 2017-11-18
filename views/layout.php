@@ -12,7 +12,7 @@
   </head>
   <body>
     <header>
-      <div class="navbar navbar-dark bg-dark">
+      <div class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
           <a href="/" class="navbar-brand">watchpoint.io</a>
           <ul class="navbar-nav ml-auto">
