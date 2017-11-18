@@ -14,11 +14,11 @@
     <header>
       <div class="navbar navbar-dark bg-dark">
         <div class="container d-flex justify-content-between">
-          <a href="#" class="navbar-brand">watchpoint.io</a>
+          <a href="/" class="navbar-brand">watchpoint.io</a>
         </div>
         <?php if (isset($btag)): ?>
         <div>
-            <a href="#" style="color: white;"><?= $btag ?></a>
+            <a href="/user" style="color: white;"><?= $btag ?></a>
             <a href="/auth/logout" style="color: white;">Sign out</a>
         </div>
         <?php else: ?>
