@@ -13,17 +13,23 @@
   <body>
     <header>
       <div class="navbar navbar-dark bg-dark">
-        <div class="container d-flex justify-content-between">
+        <div class="container">
           <a href="/" class="navbar-brand">watchpoint.io</a>
+          <ul class="navbar-nav ml-auto">
+            <?php if (isset($btag)): ?>
+            <li class="nav-item">
+              <a href="/user" class="nav-link"><?= $btag ?></a>
+            </li>
+            <li class="nav-item">
+              <a href="/auth/logout" class="nav-link">Sign out</a>
+            </li>
+            <?php else: ?>
+            <li class="nav-item">
+              <a href="/auth" class="nav-link">Sign in</a>
+            </li>
+            <?php endif ?>
+          </ul>
         </div>
-        <?php if (isset($btag)): ?>
-        <div>
-            <a href="/user" style="color: white;"><?= $btag ?></a>
-            <a href="/auth/logout" style="color: white;">Sign out</a>
-        </div>
-        <?php else: ?>
-        <div><a href="/auth" style="color: white;">Sign in</a></div>
-        <?php endif ?>
       </div>
     </header>
     <?= $content ?>
