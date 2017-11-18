@@ -20,8 +20,18 @@ function route(string $pattern, array &$matches = null)
     return false;
 }
 
-if (route('#^/user/(\d+)$#', $matches)) {
+if (route('#^/user$#', $matches)) {
     include __DIR__ . '/../user.php';
+    exit(0);
+}
+
+if (route('#^/auth$#')) {
+    include __DIR__ . '/../auth.php';
+    exit(0);
+}
+
+if (route('#^/auth/logout$#')) {
+    include __DIR__ . '/../auth_logout.php';
     exit(0);
 }
 

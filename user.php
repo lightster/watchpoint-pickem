@@ -1,12 +1,7 @@
 <?php
 
 $app = require_once __DIR__ . '/app.php';
+$app->run();
 
-$user_id = $matches[1] ?? 'fail';
-?>
-
-<?php include __DIR__ . '/header.php'; ?>
-
-Hello user <?= $user_id ?>
-
-<?php include __DIR__ . '/footer.php'; ?>
+$app->set('btag', $_SESSION['user']['battletag']);
+echo $app->render(__DIR__. '/views/user.php', __DIR__ . '/views/layout.php');
