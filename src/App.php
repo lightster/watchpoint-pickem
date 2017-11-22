@@ -47,7 +47,7 @@ class App
 
     public function redirect(string $uri)
     {
-        header('Location: ' . $uri);
+        header("Location: {$uri}");
         exit(0);
     }
 }
