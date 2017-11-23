@@ -12,9 +12,9 @@
   </head>
   <body>
     <header>
-      <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="navbar navbar-expand bg-dark navbar-dark">
         <div class="container">
-          <a href="/" class="navbar-brand">watchpoint.io</a>
+          <a href="/" class="navbar-brand"><img src="/img/logo.svg" width="180"></a>
           <ul class="navbar-nav ml-auto">
             <?php if (isset($btag)): ?>
             <li class="nav-item">
