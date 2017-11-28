@@ -18,7 +18,7 @@
           <ul class="navbar-nav ml-auto">
             <?php if (isset($btag)): ?>
             <li class="nav-item">
-              <a href="/user" class="nav-link"><?= $btag ?></a>
+              <a href="/user" class="nav-link"><?= htmlspecialchars($btag) ?></a>
             </li>
             <li class="nav-item">
               <a href="/auth/logout" class="nav-link">Sign out</a>
