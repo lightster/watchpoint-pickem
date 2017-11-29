@@ -1,5 +1,13 @@
 <?php
 
+// ignore static files for PHP built-in webserver
+if (PHP_SAPI == 'cli-server') {
+    $file = __DIR__ . $_SERVER['REQUEST_URI'];
+    if (is_file($file)) {
+        return false;
+    }
+}
+
 /**
  * Checks if the request uri matches a route regex pattern
  * Example: if (route('#/user/(\d+)#, $matches))
