@@ -8,9 +8,17 @@ class App
     public function option(string $key, $value = null)
     {
         if (count(func_get_args()) === 1) {
+            if (is_callable($this->options[$key])) {
+                return $this->options[$key]->call($this);
+            }
             return $this->options[$key];
         }
         $this->options[$key] = $value;
+    }
+
+    public function db()
+    {
+        return $this->option('db');
     }
 
     public function run(Closure $configure_func = null)
@@ -19,6 +27,14 @@ class App
         $this->option('view', new View);
         $this->option('session_name', 'watchpoint-io');
         $this->option('session_read_only', true);
+        $this->option('db', function () {
+            static $db;
+            if ($db) {
+                return $db;
+            }
+            $db = new Db(getenv('DB_URL'));
+            return $db;
+        });
 
         if ($configure_func) {
             $configure_func->call($this);
