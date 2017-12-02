@@ -96,7 +96,7 @@ SQL;
         $user = parse_url($this->url, PHP_URL_USER);
         $password = parse_url($this->url, PHP_URL_PASS);
 
-        // get additional options liks application_name
+        // get additional options like application_name
         parse_str(parse_url($this->url, PHP_URL_QUERY), $options);
         $options_str = implode(' ', array_map(function($arg, $val) {
             return "--{$arg}={$val}";
