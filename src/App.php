@@ -3,6 +3,7 @@
 class App
 {
     private $options = [];
+    private $env = [];
 
     public function option(string $key, $value = null)
     {
@@ -14,6 +15,7 @@ class App
 
     public function run(Closure $configure_func = null)
     {
+        $this->loadEnv();
         $this->option('view', new View);
         $this->option('session_name', 'watchpoint-io');
         $this->option('session_read_only', true);
@@ -25,6 +27,18 @@ class App
         $this->startSession();
 
         return $this;
+    }
+
+    private function loadEnv()
+    {
+        $env_file = __DIR__ . '/../.env.php';
+        if (!file_exists($env_file)) {
+            return;
+        }
+        $env = include $env_file;
+        foreach ($env as $key => $value) {
+            putenv("{$key}={$value}");
+        }
     }
 
     private function startSession()
