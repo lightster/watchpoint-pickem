@@ -68,6 +68,22 @@ SQL;
         return $row;
     }
 
+    public function delete($table, string $where, array $params = [])
+    {
+        if (empty(trim($where))) {
+            throw new DbException(sprintf(
+                'No $where condition passed when trying to delete from "%s"',
+                $table
+            ));
+        }
+
+        $sql = <<<SQL
+DELETE FROM {$table}
+WHERE {$where}
+SQL;
+        $this->query($sql, $params);
+    }
+
     public function quote($val)
     {
         $this->getConn();
