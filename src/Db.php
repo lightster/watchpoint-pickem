@@ -68,61 +68,6 @@ SQL;
         return $row;
     }
 
-    public function update($table, array $data, string $where, array $params = [])
-    {
-        if (empty(trim($where))) {
-            trigger_error(sprintf(
-                'No $where condition passed when trying to delete from "%s"',
-                $table
-            ));
-
-            return false;
-        }
-
-        $sql = <<<SQL
-UPDATE %s SET %s
-WHERE %s
-    RETURNING *
-SQL;
-        $cols = [];
-        $n = count($params) + 1;
-        foreach ($data as $field => $value) {
-            $cols[] = $this->quoteCol($field) . ' = $' . $n++;
-            $params[] = $value;
-        }
-        $sql = sprintf($sql, $table, implode(', ', $cols), $where);
-        $row = $this->fetchRow($sql, $params);
-
-        return $row;
-    }
-
-    public function delete($table, string $where, array $params = [])
-    {
-        if (empty(trim($where))) {
-            trigger_error(sprintf(
-                'No $where condition passed when trying to delete from "%s"',
-                $table
-            ));
-
-            return false;
-        }
-
-        $sql = <<<SQL
-DELETE FROM %s
-WHERE %s
-SQL;
-        $sql = sprintf($sql, $table, $where);
-        $result = pg_query_params($this->getConn(), $sql, $params);
-
-        if (!$result) {
-            return false;
-        }
-
-        $num_del = pg_affected_rows($result);
-
-        return $num_del;
-    }
-
     public function quote($val)
     {
         $this->getConn();
