@@ -3,9 +3,8 @@ db query() runs a query
 --FILE--
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$db = require_once __DIR__ . '/db.inc';
 
-$db = new Db('postgres://watchpoint:@localhost/watchpoint');
 $result = $db->query('SELECT 1');
 var_dump(get_class($result));
 $result = $db->query('SELECT $1', ['1']);

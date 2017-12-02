@@ -3,9 +3,8 @@ db quoteCol escapes postgres column
 --FILE--
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$db = require_once __DIR__ . '/db.inc';
 
-$db = new Db('postgres://watchpoint:@localhost/watchpoint');
 var_dump($db->quoteCol('id'));
 var_dump($db->quoteCol('someColName'));
 
