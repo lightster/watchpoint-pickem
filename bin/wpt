@@ -13,6 +13,7 @@ if ($cmd === 'migrate:setup') {
         echo "Created migrations table\n";
     } else {
         echo "Failed\n";
+        exit(1);
     }
     exit(0);
 }
@@ -22,6 +23,7 @@ if ($cmd === 'migrate:new') {
     $filename = Migration::create($name);
     if ($filename === '') {
         echo "Could not write new migration\n";
+        exit(1);
     } else {
         echo "{$filename} created in migrations/\n";
     }
@@ -58,4 +60,5 @@ if ($cmd === 'migrate') {
     exit(0);
 }
 
-die("Command '{$cmd}' not found.");
+echo "Command '{$cmd}' not found.\n";
+exit(1);
