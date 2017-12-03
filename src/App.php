@@ -35,6 +35,9 @@ class App
             $db = new Db(getenv('DB_URL'));
             return $db;
         });
+        Model::setDb(function() {
+            return $this->option('db');
+        });
 
         if ($configure_func) {
             $configure_func->call($this);
