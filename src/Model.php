@@ -2,7 +2,11 @@
 
 class Model
 {
-    const DEFAULT = 0;
+    /**
+     * Default a columns value to whatever the default is in postgres.
+     * Essentially this will exclude the column when doing a db->insert()
+     */
+    const DEFAULT = 'PG-DEFAULT';
 
     private static $db;
     private static $db_loaded = false;
@@ -87,7 +91,7 @@ SQL;
 
     public function save()
     {
-        if ($this->getData(static::$primary_key) !== Model::DEFAULT) {
+        if ($this->getId() !== Model::DEFAULT) {
             // update
             $changed_data = array_intersect_key($this->data, $this->changed);
             if (empty($changed_data)) {
