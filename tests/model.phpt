@@ -39,7 +39,6 @@ var_dump(!empty($updated_at));
 // test model updates data
 $t->setData([
     'name'       => 'Updated...',
-    'updated_at' => new DbExpr('now()'),
 ]);
 $t->save();
 $new_updated_at = $db->fetchOne('SELECT updated_at FROM t WHERE id = $1', [$t->getId()]);

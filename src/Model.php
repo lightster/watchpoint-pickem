@@ -93,10 +93,17 @@ SQL;
     {
         if ($this->getId() !== Model::DEFAULT) {
             // update
-            $changed_data = array_intersect_key($this->data, $this->changed);
-            if (empty($changed_data)) {
+            if (empty($this->changed)) {
                 return;
             }
+
+            // pre-update hook to set the updated_at column
+            // this is magical, but I think it might be better than
+            // adding it to every Model
+            $this->setData([
+                'updated_at' => new DbExpr('now()'),
+            ]);
+            $changed_data = array_intersect_key($this->data, $this->changed);
             $row = $this->db()->update(
                 static::$table_name,
                 $changed_data,
