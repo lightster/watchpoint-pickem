@@ -106,27 +106,34 @@ SQL;
             return $this->conn;
         }
 
-        $host = parse_url($this->url, PHP_URL_HOST);
-        $port = parse_url($this->url, PHP_URL_PORT) ?: 5432;
-        $database = substr(parse_url($this->url, PHP_URL_PATH), 1);
-        $user = parse_url($this->url, PHP_URL_USER);
-        $password = parse_url($this->url, PHP_URL_PASS);
-
-        // get additional options like application_name
-        parse_str(parse_url($this->url, PHP_URL_QUERY), $options);
-        $options_str = implode(' ', array_map(function($arg, $val) {
-            return "--{$arg}={$val}";
-        }, array_keys($options), $options));
-
-        $conn_str = "host={$host} port={$port} dbname={$database}"
-            . " user={$user} password={$password} connect_timeout=2"
-            . " options='{$options_str}'";
-        $this->conn = pg_connect($conn_str);
+        $this->conn = pg_connect(self::pgConnStr($this->url));
 
         if (!$this->conn) {
             throw new DbException("Failed to connect to postgres");
         }
 
         return $this->conn;
+    }
+
+    private static function pgConnStr(string $url, int $conn_timeout = 2): string
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        $port = parse_url($url, PHP_URL_PORT) ?: 5432;
+        $database = substr(parse_url($url, PHP_URL_PATH), 1);
+        $user = parse_url($url, PHP_URL_USER);
+        $password = parse_url($url, PHP_URL_PASS);
+
+        // get additional options like application_name
+        parse_str(parse_url($url, PHP_URL_QUERY), $options);
+        $options_str = implode(' ', array_map(function($arg, $val) {
+            return "--{$arg}={$val}";
+        }, array_keys($options), $options));
+
+        $conn_str = "host={$host} port={$port} dbname={$database}"
+            . " user={$user} password={$password}"
+            . " connect_timeout={$conn_timeout}"
+            . " options='{$options_str}'";
+
+        return $conn_str;
     }
 }
