@@ -84,6 +84,36 @@ SQL;
         $this->query($sql, $params);
     }
 
+    public function update($table, array $data, string $where, array $params = []): array
+    {
+        if (empty(trim($where))) {
+            throw new DbException(sprintf(
+                'No $where condition passed when trying to update "%s"',
+                $table
+            ));
+        }
+
+        $sql = <<<SQL
+UPDATE %s SET %s
+WHERE %s
+    RETURNING *
+SQL;
+        $cols = [];
+        $n = count($params) + 1;
+        foreach ($data as $field => $value) {
+            if (is_object($value) && get_class($value) === 'DbExpr') {
+                $cols[] = $this->quoteCol($field) . " = {$value}";
+            } else {
+                $cols[] = $this->quoteCol($field) . ' = $' . $n++;
+                $params[] = $value;
+            }
+        }
+        $sql = sprintf($sql, $table, implode(", ", $cols), $where);
+        $row = $this->fetchRow($sql, $params);
+
+        return $row;
+    }
+
     public function quote($val)
     {
         $this->getConn();
