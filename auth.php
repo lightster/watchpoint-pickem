@@ -26,8 +26,15 @@ $bnet_auth = new BnetAuth([
 ]);
 
 try {
-    $user = $bnet_auth->getUser();
-    $_SESSION['user'] = $user;
+    $bnet_user = $bnet_auth->getUser();
+    $user = User::findByBnetAccountId($bnet_user['id']);
+    if (!$user) {
+        $user = User::create([
+            'bnet_account_id' => $bnet_user['id'],
+            'bnet_tag'        => $bnet_user['battletag'],
+        ]);
+    }
+    $_SESSION['user'] = $user->getId();
     $app->redirect('/user');
 } catch (BnetAuthException $e) {
     $app->redirect('/auth/error');
