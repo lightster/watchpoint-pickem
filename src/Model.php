@@ -39,7 +39,7 @@ class Model
         return $model;
     }
 
-    public static function find($id)
+    public static function find($id): ?Model
     {
         $sql = <<<SQL
 SELECT *
@@ -48,9 +48,9 @@ WHERE %s = $1
 LIMIT 1
 SQL;
         $sql = sprintf($sql, static::$table_name, static::$primary_key);
-        $row = $this->db()->fetchRow($sql, [$id]);
+        $row = self::db()->fetchRow($sql, [$id]);
         if (!$row) {
-            return false;
+            return null;
         }
         $model = new static($row, false);
 

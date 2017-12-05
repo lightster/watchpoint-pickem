@@ -16,7 +16,7 @@ class DbResult
 
     public function fetchRow(): array
     {
-        $row = pg_fetch_assoc($this->pg_result);
+        $row = pg_fetch_assoc($this->pg_result) ?: [];
 
         return $row;
     }
