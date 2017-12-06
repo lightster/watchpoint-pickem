@@ -51,8 +51,7 @@ class App
     public function requireLogin()
     {
         if (!isset($_SESSION['user'])) {
-            header('Location: /auth');
-            exit(0);
+            $this->redirect('/auth');
         }
 
         $this->option('user', function() {
