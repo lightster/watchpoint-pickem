@@ -2,8 +2,14 @@
 
 $app = require_once __DIR__ . '/app.php';
 $app->run();
+$app->requireLogin();
 
-$user = User::find($_SESSION['user']);
+$user = $app->option('user');
 
-$app->set('btag', $user->getData('bnet_tag'));
+if (isset($_POST['email'])) {
+    $user->setData(['email' => $_POST['email']]);
+    $user->save();
+    $app->redirect('/user');
+}
+
 echo $app->render(__DIR__. '/views/user.php', __DIR__ . '/views/layout.php');

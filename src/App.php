@@ -48,6 +48,25 @@ class App
         return $this;
     }
 
+    public function requireLogin()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /auth');
+            exit(0);
+        }
+
+        $this->option('user', function() {
+            static $user;
+            if ($user) {
+                return $user;
+            }
+            $user = User::find($_SESSION['user']);
+
+            return $user;
+        });
+        $this->set('user', $this->option('user'));
+    }
+
     private function loadEnv()
     {
         $env_file = __DIR__ . '/../.env.php';

@@ -16,9 +16,9 @@
         <div class="container">
           <a href="/" class="navbar-brand"><img src="/img/logo.svg" width="180"></a>
           <ul class="navbar-nav ml-auto">
-            <?php if (isset($btag)): ?>
+            <?php if (isset($user)): ?>
             <li class="nav-item">
-              <a href="/user" class="nav-link"><?= htmlspecialchars($btag) ?></a>
+              <a href="/user" class="nav-link"><?= htmlspecialchars($user->getData('bnet_tag')) ?></a>
             </li>
             <li class="nav-item">
               <a href="/auth/logout" class="nav-link">Sign out</a>
