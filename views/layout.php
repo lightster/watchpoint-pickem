@@ -32,6 +32,12 @@
         </div>
       </div>
     </header>
+    <?php if ($flash_msgs = $flash_messages()): ?>
+    <?php foreach ($flash_msgs as $msg): ?>
+      <?php list($msg, $status) = $msg; ?>
+      <div><?= htmlspecialchars($msg) ?></div>
+    <?php endforeach ?>
+    <?php endif ?>
     <?= $content ?>
     <footer class="text-muted">
       <div class="container">
