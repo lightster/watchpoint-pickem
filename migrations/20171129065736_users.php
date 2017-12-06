@@ -2,7 +2,7 @@
 
 if ($rollback === true) {
     $app->db()->query("DROP TABLE users;");
-    return;
+    return true;
 }
 
 // create users table

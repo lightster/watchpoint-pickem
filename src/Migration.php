@@ -124,7 +124,18 @@ SQL;
 
     private function run(App $app, bool $rollback = false, int $batch = null)
     {
-        require self::getMigrationsDir() . '/' . $this->getId();
+        $migration_file = self::getMigrationsDir() . '/' . $this->getId();
+        $mig = function($app, $rollback) use($migration_file) {
+            if ($rollback === true) {
+                $res = require $migration_file;
+                if ($res !== true) {
+                    throw new MigrationException("Rollback must return true;");
+                }
+            } else {
+                require $migration_file;
+            }
+        };
+        call_user_func($mig, $app, $rollback);
 
         if ($rollback === false) {
             $this->markAsRun($app->db(), $batch);
