@@ -9,6 +9,7 @@ $user = $app->option('user');
 if (isset($_POST['email'])) {
     $user->setData(['email' => $_POST['email']]);
     $user->save();
+    $app->flash("Updated your information.");
     $app->redirect('/user');
 }
 
