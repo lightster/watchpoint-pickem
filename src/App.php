@@ -4,6 +4,7 @@ class App
 {
     private $options = [];
     private $env = [];
+    private $flash_messages = [];
 
     public function option(string $key, $value = null)
     {
@@ -44,8 +45,62 @@ class App
         }
 
         $this->startSession();
+        $this->set('flash_messages', function() {
+            return $this->getFlashMessages();
+        });
+
+        register_shutdown_function(function() {
+            $this->writeFlash();
+        });
 
         return $this;
+    }
+
+    public function requireLogin()
+    {
+        if (!isset($_SESSION['user'])) {
+            $this->redirect('/auth');
+        }
+
+        $this->option('user', function() {
+            static $user;
+            if ($user) {
+                return $user;
+            }
+            $user = User::find($_SESSION['user']);
+
+            return $user;
+        });
+        $this->set('user', $this->option('user'));
+    }
+
+    private function writeFlash()
+    {
+        $has_flash = array_key_exists('flash', $_SESSION);
+        if ($has_flash || $this->flash_messages) {
+            $this->startSession(false);
+        }
+
+        if ($has_flash) {
+            unset($_SESSION['flash']);
+        }
+        if ($this->flash_messages) {
+            $_SESSION['flash'] = $this->flash_messages;
+        }
+
+        if ($has_flash || $this->flash_messages) {
+            session_write_close();
+        }
+    }
+
+    public function flash(string $msg, int $status = 0)
+    {
+        $this->flash_messages[] = [$msg, $status];
+    }
+
+    public function getFlashMessages(): array
+    {
+        return $_SESSION['flash'] ?? [];
     }
 
     private function loadEnv()
@@ -60,11 +115,11 @@ class App
         }
     }
 
-    private function startSession()
+    private function startSession(bool $read_and_close = null)
     {
         session_name($this->option('session_name'));
         session_start([
-            'read_and_close'  => $this->option('session_read_only'),
+            'read_and_close'  => $read_and_close ?? $this->option('session_read_only'),
         ]);
     }
 
