@@ -7,6 +7,9 @@ $app->run();
 $script = array_shift($argv);
 $cmd = array_shift($argv);
 
+/**
+ * Migrations
+ */
 if ($cmd === 'migrate:setup') {
     $result = Migration::createMigrationsTable($app->option('db'));
     if ($result) {
@@ -57,6 +60,17 @@ if ($cmd === 'migrate') {
             }
         }
     );
+    exit(0);
+}
+
+if ($cmd === 'import-teams') {
+    $team_importer = new TeamImporter($app->db());
+    $teams = $team_importer->import();
+    if (!$teams) {
+        echo "Failed to import teams.\n";
+        exit(1);
+    }
+    echo "Imported " . count($teams) . " team(s)\n";
     exit(0);
 }
 
