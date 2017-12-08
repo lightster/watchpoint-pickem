@@ -12,11 +12,7 @@ class TeamImporter
     public function import(): array
     {
         $teams_api = 'https://overwatchleague.com/en-us/api/teams';
-        $st = fopen($teams_api, 'r');
-        if (!$st) {
-            throw new Exception("Could not connect to '{$teams_api}'");
-        }
-        $data = stream_get_contents($st);
+        $data = file_get_contents($teams_api);
         if (!$data) {
             throw new Exception("Failed to read data from '{$teams_api}'");
         }

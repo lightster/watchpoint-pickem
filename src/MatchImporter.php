@@ -12,11 +12,7 @@ class MatchImporter
     public function import(int $stage): array
     {
         $matches_api = 'https://api.overwatchleague.com/schedule?locale=en_US';
-        $st = fopen($matches_api, 'r');
-        if (!$st) {
-            throw new Exception("Could not connect to '{$matches_api}'");
-        }
-        $data = stream_get_contents($st);
+        $data = file_get_contents($matches_api);
         if (!$data) {
             throw new Exception("Failed to read data from '{$matches_api}'");
         }
