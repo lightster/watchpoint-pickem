@@ -25,11 +25,15 @@ class TeamImporter
         $meta = $data['meta'];
         $teams = [];
         foreach ($teams_data as $team_data) {
+            $blizz_id = $team_data['id'];
+            if (Team::findByBlizzId($blizz_id)) {
+                continue;
+            }
             $division_id = $team_data['divisionId'];
             $division_str = $meta['divisions'][$division_id];
             $division = $meta['strings'][$division_str];
-            $team = Team::create([
-                'blizz_id'          => $team_data['id'],
+            $team = new Team([
+                'blizz_id'          => $blizz_id,
                 'blizz_division_id' => $division_id,
                 'division'          => $division,
                 'name'              => $team_data['name'],
@@ -41,7 +45,8 @@ class TeamImporter
                     $team_data['colors']['secondary'],
                 ],
             ]);
-            $team->saveLogo($team_data['logo']);
+            $team->setLogo($team_data['logo']);
+            $team->save();
             $teams[] = $team;
         }
 

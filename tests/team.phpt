@@ -8,7 +8,7 @@ $db = require_once __DIR__ . '/db.inc';
 $db->query('BEGIN');
 
 $team_colors = ['#ff0000', '#000000'];
-$team = Team::create([
+$team = new Team([
     'blizz_id'          => 8912,
     'blizz_division_id' => 79,
     'division'          => 'Pacific',
@@ -18,13 +18,14 @@ $team = Team::create([
     'handle'            => 'testing.1234',
     'colors'            => $team_colors,
 ]);
-var_dump($team->getColors() === $team_colors);
 
 // test saving a logo
-$team->saveLogo(__DIR__ . '/logo.svg');
-var_dump(file_exists($team->getLogoPath()));
+$team->setLogo(__DIR__ . '/logo.svg');
+$team->save();
 
-unlink($team->getLogoPath());
+var_dump($team->getColors() === $team_colors);
+var_dump($team->getData('logo') == file_get_contents(__DIR__ . '/logo.svg'));
+
 $db->query('ROLLBACK');
 
 ?>

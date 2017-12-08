@@ -14,6 +14,7 @@ class Team extends Model
         'location'          => null,
         'handle'            => null,
         'colors'            => null,
+        'logo'              => null,
         'created_at'        => Model::DEFAULT,
         'updated_at'        => Model::DEFAULT,
     ];
@@ -31,16 +32,12 @@ class Team extends Model
         return $colors_arr;
     }
 
-    public function getLogoPath(): string
+    public function setLogo(string $logo_url)
     {
-        return __DIR__ . '/../public/img/teams/' . $this->getId() . '.svg';
-    }
-
-    public function saveLogo(string $logo_url)
-    {
-        $cp = copy($logo_url, $this->getLogoPath());
-        if (!$cp) {
-            throw new Exception("Failed to save logo '{$logo_url}'");
+        $logo = file_get_contents($logo_url);
+        if (!$logo) {
+            throw new ModelException("Failed to retrieve logo '{$logo_url}'");
         }
+        $this->setData(['logo' => $logo]);
     }
 }

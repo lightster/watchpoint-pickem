@@ -66,10 +66,6 @@ if ($cmd === 'migrate') {
 if ($cmd === 'import-teams') {
     $team_importer = new TeamImporter($app->db());
     $teams = $team_importer->import();
-    if (!$teams) {
-        echo "Failed to import teams.\n";
-        exit(1);
-    }
     echo "Imported " . count($teams) . " team(s)\n";
     exit(0);
 }

@@ -10,7 +10,7 @@ if ($rollback === true) {
 $sql = <<<SQL
 CREATE TABLE teams (
     team_id serial PRIMARY KEY,
-    blizz_id integer NOT NULL,
+    blizz_id integer NOT NULL UNIQUE,
     blizz_division_id integer NOT NULL,
     division varchar NOT NULL,
     name varchar NOT NULL,
@@ -18,6 +18,7 @@ CREATE TABLE teams (
     location varchar NOT NULL,
     handle varchar NOT NULL,
     colors varchar[] NOT NULL,
+    logo varchar NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
