@@ -11,6 +11,7 @@ var_dump($db->quote("you're"));
 var_dump($db->quote(null));
 var_dump($db->quote(false));
 var_dump($db->quote(['a', 'b']));
+var_dump($db->quote(new DbExpr('now()')));
 
 ?>
 --EXPECTF--
@@ -20,3 +21,4 @@ string(%d) "'you''re'"
 string(%d) "NULL"
 string(%d) "FALSE"
 string(%d) "ARRAY['a', 'b']"
+string(%d) "now()"

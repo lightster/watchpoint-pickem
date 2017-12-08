@@ -52,18 +52,25 @@ class Db
 
     public function insert(string $table, array $data = []): array
     {
+        $cols = array_keys($data);
+        $cols_sql = implode(', ', array_map([$this, 'quoteCol'], $cols));
+
+        $vals = [];
+        $params = [];
+        $n = 1;
+        foreach ($data as $val) {
+            $vals[] = $this->quote($val, function($val) use (&$n, &$params) {
+                $params[] = $val;
+                return '$' . $n++;
+            });
+        }
+
         $sql = <<<SQL
 INSERT INTO %s (%s) VALUES (%s)
     RETURNING *;
 SQL;
-        $cols = array_keys($data);
-        $cols_sql = implode(', ', array_map([$this, 'quoteCol'], $cols));
-        $vals = array_map(function($val) {
-            return '$' . $val;
-        }, range(1, count($data)));
-        $vals_sql = implode(', ', $vals);
-        $sql = sprintf($sql, $table, $cols_sql, $vals_sql);
-        $row = $this->fetchRow($sql, array_values($data));
+        $sql = sprintf($sql, $table, $cols_sql, implode(", ", $vals));
+        $row = $this->fetchRow($sql, $params);
 
         return $row;
     }
@@ -100,13 +107,12 @@ WHERE %s
 SQL;
         $cols = [];
         $n = count($params) + 1;
-        foreach ($data as $field => $value) {
-            if (is_object($value) && get_class($value) === 'DbExpr') {
-                $cols[] = $this->quoteCol($field) . " = {$value}";
-            } else {
-                $cols[] = $this->quoteCol($field) . ' = $' . $n++;
-                $params[] = $value;
-            }
+        foreach ($data as $field => $val) {
+            $val = $this->quote($val, function($val) use (&$n, &$params) {
+                $params[] = $val;
+                return '$' . $n++;
+            });
+            $cols[] = $this->quoteCol($field) . " = {$val}";
         }
         $sql = sprintf($sql, $table, implode(", ", $cols), $where);
         $row = $this->fetchRow($sql, $params);
@@ -114,7 +120,7 @@ SQL;
         return $row;
     }
 
-    public function quote($val): string
+    public function quote($val, callable $quote_func = null): string
     {
         if (is_null($val)) {
             return 'NULL';
@@ -128,13 +134,25 @@ SQL;
             return "{$val}";
         }
 
+        if (is_object($val) && get_class($val) === 'DbExpr') {
+            return "{$val}";
+        }
+
         if (is_array($val)) {
-            $quoted_vals = array_map([$this, 'quote'], $val);
+            $quoted_vals = [];
+            foreach ($val as $v) {
+                $quoted_vals[] = $this->quote($v, $quote_func);
+            }
 
             return 'ARRAY[' . implode(", ", $quoted_vals) . ']';
         }
 
-        $quoted_val = pg_escape_literal($this->getConn(), $val);
+        if (!$quote_func) {
+            $quote_func = function($val) {
+                return pg_escape_literal($this->getConn(), $val);
+            };
+        }
+        $quoted_val = $quote_func($val);
 
         return $quoted_val;
     }
