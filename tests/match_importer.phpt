@@ -13,7 +13,7 @@ $matches = $match_importer->import(0);
 
 $num_matches = (int) $db->fetchOne("SELECT COUNT(*) FROM matches");
 
-var_dump(count($matches) == $num_matches);
+var_dump($matches > 0 && count($matches) == $num_matches);
 
 // import again to make sure we skip ones that already exist
 $match_importer->import(0);

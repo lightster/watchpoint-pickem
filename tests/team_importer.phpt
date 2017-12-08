@@ -13,7 +13,7 @@ $team_imp = new TeamImporter($db);
 $teams = $team_imp->import();
 
 $num_teams = (int) $db->fetchOne("SELECT COUNT(*) FROM teams");
-var_dump($num_teams == count($teams));
+var_dump($teams > 0 && $num_teams == count($teams));
 
 $db->query("ROLLBACK");
 
