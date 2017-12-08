@@ -18,6 +18,11 @@ class Team extends Model
         'updated_at'        => Model::DEFAULT,
     ];
 
+    public static function findByBlizzId(int $blizz_id): ?Team
+    {
+        return self::findWhere("blizz_id = $1", [$blizz_id]);
+    }
+
     public function getColors(): array
     {
         $colors = $this->getData('colors');
