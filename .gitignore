@@ -2,4 +2,3 @@ composer.phar
 /vendor/
 docker-compose.override.yml
 .env.php
-public/img/teams/
