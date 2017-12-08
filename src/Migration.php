@@ -71,7 +71,7 @@ TMPL;
         $db = $app->db();
         $db->query('BEGIN');
         $result = $db->query(
-            "SELECT migration_id FROM migrations WHERE batch = $1",
+            "SELECT migration_id FROM migrations WHERE batch = $1 ORDER BY 1 DESC",
             [self::getMostRecentBatchNumber($db)]
         );
         while ($migration_id = $result->fetchOne()) {

@@ -57,6 +57,31 @@ SQL;
         return $model;
     }
 
+    public static function findWhere(string $where, array $params = []): ?Model
+    {
+        if (empty(trim($where))) {
+            throw new ModelException(sprintf(
+                "No \$where condition passed when trying to findWhere '%s'",
+                static::$table_name
+            ));
+        }
+
+        $sql = <<<SQL
+SELECT *
+FROM %s
+WHERE %s
+LIMIT 1
+SQL;
+        $sql = sprintf($sql, static::$table_name, $where);
+        $row = self::db()->fetchRow($sql, $params);
+        if (!$row) {
+            return null;
+        }
+        $model = new static($row, false);
+
+        return $model;
+    }
+
     public function __construct(array $data = [], $dirty = true)
     {
         $this->setData($data);

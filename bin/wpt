@@ -7,6 +7,9 @@ $app->run();
 $script = array_shift($argv);
 $cmd = array_shift($argv);
 
+/**
+ * Migrations
+ */
 if ($cmd === 'migrate:setup') {
     $result = Migration::createMigrationsTable($app->option('db'));
     if ($result) {
@@ -57,6 +60,25 @@ if ($cmd === 'migrate') {
             }
         }
     );
+    exit(0);
+}
+
+if ($cmd === 'import-teams') {
+    $team_importer = new TeamImporter($app->db());
+    $teams = $team_importer->import();
+    echo "Imported " . count($teams) . " team(s)\n";
+    exit(0);
+}
+
+if ($cmd === 'import-matches') {
+    $stage = array_shift($argv);
+    if (!is_numeric($stage)) {
+        echo "Usage: bin/wpt import-matches {stage}\n";
+        exit(1);
+    }
+    $match_importer = new MatchImporter($app->db());
+    $matches = $match_importer->import($stage);
+    echo "Imported " . count($matches) . " matches\n";
     exit(0);
 }
 
