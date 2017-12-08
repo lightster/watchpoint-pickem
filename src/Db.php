@@ -114,18 +114,34 @@ SQL;
         return $row;
     }
 
-    public function quote($val)
+    public function quote($val): string
     {
-        $this->getConn();
-        $quoted_val = pg_escape_literal($val);
+        if (is_null($val)) {
+            return 'NULL';
+        }
+
+        if (is_bool($val)) {
+            return ($val ? 'TRUE' : 'FALSE');
+        }
+
+        if (is_numeric($val)) {
+            return "{$val}";
+        }
+
+        if (is_array($val)) {
+            $quoted_vals = array_map([$this, 'quote'], $val);
+
+            return 'ARRAY[' . implode(", ", $quoted_vals) . ']';
+        }
+
+        $quoted_val = pg_escape_literal($this->getConn(), $val);
 
         return $quoted_val;
     }
 
-    public function quoteCol($col)
+    public function quoteCol($col): string
     {
-        $this->getConn();
-        $quoted_col = pg_escape_identifier($col);
+        $quoted_col = pg_escape_identifier($this->getConn(), $col);
 
         return $quoted_col;
     }
