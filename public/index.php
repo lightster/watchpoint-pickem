@@ -43,6 +43,16 @@ if (route('#^/auth/logout$#')) {
     exit(0);
 }
 
+if (route('#^/pools/(?P<slug>.+)$#', $matches)) {
+    include __DIR__ . '/../pool.php';
+    exit(0);
+}
+
+if (route('#^/pools$#', $matches)) {
+    include __DIR__ . '/../pools.php';
+    exit(0);
+}
+
 if (route('#^/$#')) {
     include __DIR__ . '/../home.php';
     exit(0);
