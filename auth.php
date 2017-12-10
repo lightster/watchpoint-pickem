@@ -35,7 +35,7 @@ try {
         ]);
     }
     $_SESSION['user'] = $user->getId();
-    $app->redirect('/user');
+    $app->redirect('/home');
 } catch (BnetAuthException $e) {
     $app->redirect('/auth/error');
 }

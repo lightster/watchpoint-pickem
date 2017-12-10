@@ -13,6 +13,14 @@
     <input type="submit" class="btn btn-primary" value="Create Pool">
 </form>
 
+<ul>
+<?php foreach($pools as $pool): ?>
+<li><a href="/pools/<?= $pool->getData('slug') ?>">
+    <?= htmlspecialchars($pool->getData('title')) ?></a>
+</li>
+<?php endforeach ?>
+</ul>
+
 </div>
 </div>
 </div>

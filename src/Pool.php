@@ -15,15 +15,56 @@ class Pool extends Model
         'updated_at'  => Model::DEFAULT,
     ];
 
-    public static function generateSlug(): string
+    public static function findBySlug(string $slug): ?Pool
+    {
+        return self::findWhere("slug = $1", [$slug]);
+    }
+
+    public static function fetchAllByUser(User $user): array
+    {
+        $sql = <<<SQL
+SELECT *
+FROM pools
+WHERE user_id = $1
+SQL;
+        $res = self::db()->query($sql, [$user->getId()]);
+        $pools = [];
+        while ($row = $res->fetchRow()) {
+            $pools[] = new Pool($row, false);
+        }
+
+        return $pools;
+    }
+
+    public function getUser(): User
+    {
+        return User::find($this->getData('user_id'));
+    }
+
+    public function join(User $user): PoolUser
+    {
+        $pool_user = PoolUser::create([
+            'pool_id' => $this->getId(),
+            'user_id' => $user->getId(),
+        ]);
+
+        return $pool_user;
+    }
+
+    protected function beforeCreate()
+    {
+        $this->setData(['slug' => $this->generateSlug()]);
+    }
+
+    protected function afterCreate()
+    {
+        $this->join($this->getUser());
+    }
+
+    private function generateSlug(): string
     {
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return substr(str_shuffle(str_repeat($chars, 6)), 0, 9);
-    }
-
-    public static function findBySlug(string $slug): ?Pool
-    {
-        return self::findWhere("slug = $1", [$slug]);
     }
 }
