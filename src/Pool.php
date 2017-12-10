@@ -25,7 +25,11 @@ class Pool extends Model
         $sql = <<<SQL
 SELECT *
 FROM pools
-WHERE user_id = $1
+WHERE pool_id IN (
+    SELECT pool_id
+    FROM pool_users
+    WHERE user_id = $1
+)
 SQL;
         $res = self::db()->query($sql, [$user->getId()]);
         $pools = [];
