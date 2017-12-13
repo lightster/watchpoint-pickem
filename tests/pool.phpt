@@ -25,6 +25,8 @@ $pool_user = $pool->join($test_user2);
 var_dump($pool_user->getData('user_id') == $test_user2->getId());
 var_dump($pool_user->getData('pool_id') == $pool->getId());
 
+var_dump(count($pool->getUsers()));
+
 var_dump($db->fetchOne("SELECT COUNT(*) FROM pool_users WHERE pool_id = $1", [$pool->getId()]));
 
 $db->query('ROLLBACK');
@@ -33,4 +35,5 @@ $db->query('ROLLBACK');
 --EXPECTF--
 bool(true)
 bool(true)
+int(2)
 string(%d) "2"

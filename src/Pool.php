@@ -22,22 +22,14 @@ class Pool extends Model
 
     public static function fetchAllByUser(User $user): array
     {
-        $sql = <<<SQL
-SELECT *
-FROM pools
-WHERE pool_id IN (
+        $where = <<<SQL
+pool_id IN (
     SELECT pool_id
     FROM pool_users
     WHERE user_id = $1
 )
 SQL;
-        $res = self::db()->query($sql, [$user->getId()]);
-        $pools = [];
-        while ($row = $res->fetchRow()) {
-            $pools[] = new Pool($row, false);
-        }
-
-        return $pools;
+        return self::fetchAllWhere($where, [$user->getId()]);
     }
 
     public function getUser(): User
@@ -53,6 +45,22 @@ SQL;
         ]);
 
         return $pool_user;
+    }
+
+    public function userHasJoined(User $user): bool
+    {
+        $sql = <<<SQL
+SELECT 1
+FROM pool_users
+WHERE pool_id = $1
+    AND user_id = $2
+SQL;
+        return $this->db()->exists($sql, [$this->getId(), $user->getId()]);
+    }
+
+    public function getUsers(): array
+    {
+       return PoolUser::fetchAllByPoolId($this->getId());
     }
 
     protected function beforeCreate()

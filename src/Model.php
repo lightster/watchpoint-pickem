@@ -82,6 +82,30 @@ SQL;
         return $model;
     }
 
+    public static function fetchAllWhere(string $where, array $params = []): array
+    {
+        if (empty(trim($where))) {
+            throw new ModelException(sprintf(
+                "No \$where condition passed when trying to fetchAllWhere '%s'",
+                static::$table_name
+            ));
+        }
+
+        $sql = <<<SQL
+SELECT *
+FROM %s
+WHERE %s
+SQL;
+        $sql = sprintf($sql, static::$table_name, $where);
+        $res = self::db()->query($sql, $params);
+        $models = [];
+        while ($row = $res->fetchRow()) {
+            $models[] = new static($row, false);
+        }
+
+        return $models;
+    }
+
     public function __construct(array $data = [], $dirty = true)
     {
         $this->setData($data);

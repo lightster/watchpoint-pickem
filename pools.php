@@ -14,5 +14,4 @@ if ($_POST) {
     $app->redirect('/pools/' . $pool->getData('slug'));
 }
 
-$app->set('pools', Pool::fetchAllByUser($app->option('user')));
 echo $app->render(__DIR__. '/views/pools.php', __DIR__ . '/views/layout.php');

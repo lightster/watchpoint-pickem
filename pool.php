@@ -15,5 +15,17 @@ if (isset($_POST['join'])) {
     $app->redirect('/pools/' . $pool->getData('slug'));
 }
 
-$app->set('pool', $pool);
+$scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? 'https';
+$host = $_SERVER['HTTP_HOST'];
+$pool_url = "{$scheme}://{$host}/pools/{$pool->getData('slug')}";
+
+$app->set('pool_url', $pool_url);
+$app->set('pool', $pool->getData());
+$app->set('user_has_joined', $pool->userHasJoined($app->option('user')));
+
+$members = array_map(function (PoolUser $pool_user) {
+    return $pool_user->getDisplayName();
+}, $pool->getUsers());
+sort($members);
+$app->set('members', $members);
 echo $app->render(__DIR__. '/views/pool.php', __DIR__ . '/views/layout.php');

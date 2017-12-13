@@ -30,4 +30,9 @@ SQL;
 
         return $user;
     }
+
+    public function getDisplayName(): string
+    {
+        return $this->getData('bnet_tag');
+    }
 }
