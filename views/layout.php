@@ -39,7 +39,8 @@
                 <?php if ($flash_msgs = $flash_messages()): ?>
                     <?php foreach ($flash_msgs as $msg): ?>
                         <?php list($msg, $status) = $msg; ?>
-                        <div><?= htmlspecialchars($msg) ?></div>
+                        <div class="alert <?= ($status === 0 ? 'alert-success' :
+                        'alert-danger') ?>"><?= htmlspecialchars($msg) ?></div>
                     <?php endforeach ?>
                 <?php endif ?>
 

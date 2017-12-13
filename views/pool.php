@@ -4,8 +4,9 @@
 Share - <a href="<?= $pool_url ?>"><?= $pool_url ?></a>
 </p>
 <hr>
+
 <?php if (!$user_has_joined): ?>
-<form action="/pools/<?= $pool['slug'] ?>" method="post">
+<form action="/pools/<?= $pool['slug'] ?>" method="post" class="mb-2">
     <input type="submit" name="join" class="btn btn-primary" value="Join">
 </form>
 <?php endif ?>
