@@ -82,6 +82,30 @@ SQL;
         return $model;
     }
 
+    public static function fetchAllWhere(string $where, array $params = []): array
+    {
+        if (empty(trim($where))) {
+            throw new ModelException(sprintf(
+                "No \$where condition passed when trying to fetchAllWhere '%s'",
+                static::$table_name
+            ));
+        }
+
+        $sql = <<<SQL
+SELECT *
+FROM %s
+WHERE %s
+SQL;
+        $sql = sprintf($sql, static::$table_name, $where);
+        $res = self::db()->query($sql, $params);
+        $models = [];
+        while ($row = $res->fetchRow()) {
+            $models[] = new static($row, false);
+        }
+
+        return $models;
+    }
+
     public function __construct(array $data = [], $dirty = true)
     {
         $this->setData($data);
@@ -117,38 +141,10 @@ SQL;
     public function save()
     {
         if ($this->getId() !== Model::DEFAULT) {
-            // update
-            if (empty($this->changed)) {
-                return;
-            }
-
-            // pre-update hook to set the updated_at column
-            // this is magical, but I think it might be better than
-            // adding it to every Model
-            $this->setData([
-                'updated_at' => new DbExpr('now()'),
-            ]);
-            $changed_data = array_intersect_key($this->data, $this->changed);
-            $row = $this->db()->update(
-                static::$table_name,
-                $changed_data,
-                $this->db()->quoteCol(static::$primary_key) . ' = $1',
-                [$this->getId()]
-            );
-        } else {
-            // insert
-            $data = array_filter($this->getData(), function($val) {
-                return $val !== Model::DEFAULT;
-            });
-            $row = $this->db()->insert(static::$table_name, $data);
+            return $this->update();
         }
 
-        if ($row === false) {
-            throw new \Exception('Failed to save model');
-        }
-
-        $this->setData($row);
-        $this->changed = [];
+        return $this->insert();
     }
 
     public function delete()
@@ -159,5 +155,54 @@ SQL;
             [$this->getId()]
         );
         $this->setData([static::$primary_key => self::DEFAULT]);
+    }
+
+    private function update()
+    {
+        if (empty($this->changed)) {
+            return;
+        }
+
+        if (is_callable([$this, 'beforeUpdate'])) {
+            $this->beforeUpdate();
+        }
+
+        // pre-update hook to set the updated_at column
+        // this is magical, but I think it might be better than
+        // adding it to every Model
+        $this->setData([
+            'updated_at' => new DbExpr('now()'),
+        ]);
+        $changed_data = array_intersect_key($this->data, $this->changed);
+        $row = $this->db()->update(
+            static::$table_name,
+            $changed_data,
+            $this->db()->quoteCol(static::$primary_key) . ' = $1',
+            [$this->getId()]
+        );
+        $this->setData($row);
+        $this->changed = [];
+
+        if (is_callable([$this, 'afterUpdate'])) {
+            $this->afterUpdate();
+        }
+    }
+
+    private function insert()
+    {
+        if (is_callable([$this, 'beforeCreate'])) {
+            $this->beforeCreate();
+        }
+
+        $data = array_filter($this->getData(), function($val) {
+            return $val !== Model::DEFAULT;
+        });
+        $row = $this->db()->insert(static::$table_name, $data);
+        $this->setData($row);
+        $this->changed = [];
+
+        if (is_callable([$this, 'afterCreate'])) {
+            $this->afterCreate();
+        }
     }
 }

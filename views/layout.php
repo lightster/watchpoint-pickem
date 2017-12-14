@@ -14,7 +14,7 @@
     <header>
       <div class="navbar navbar-expand bg-dark navbar-dark">
         <div class="container">
-          <a href="/" class="navbar-brand"><img src="/img/logo.svg" width="180"></a>
+            <a href="<?= (isset($user) ? '/home' : '/') ?>" class="navbar-brand"><img src="/img/logo.svg" width="180"></a>
           <ul class="navbar-nav ml-auto">
             <?php if (isset($user)): ?>
             <li class="nav-item">
@@ -32,13 +32,23 @@
         </div>
       </div>
     </header>
-    <?php if ($flash_msgs = $flash_messages()): ?>
-    <?php foreach ($flash_msgs as $msg): ?>
-      <?php list($msg, $status) = $msg; ?>
-      <div><?= htmlspecialchars($msg) ?></div>
-    <?php endforeach ?>
-    <?php endif ?>
-    <?= $content ?>
+    <main role="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 mt-3">
+                <?php if ($flash_msgs = $flash_messages()): ?>
+                    <?php foreach ($flash_msgs as $msg): ?>
+                        <?php list($msg, $status) = $msg; ?>
+                        <div class="alert <?= ($status === 0 ? 'alert-success' :
+                        'alert-danger') ?>"><?= htmlspecialchars($msg) ?></div>
+                    <?php endforeach ?>
+                <?php endif ?>
+
+                <?= $content ?>
+            </div>
+        </div>
+    </div>
+    </main>
     <footer class="text-muted">
       <div class="container">
         <p class="float-right">

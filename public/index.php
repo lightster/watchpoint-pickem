@@ -28,7 +28,7 @@ function route(string $pattern, array &$matches = null)
     return false;
 }
 
-if (route('#^/user$#', $matches)) {
+if (route('#^/user$#')) {
     include __DIR__ . '/../user.php';
     exit(0);
 }
@@ -40,6 +40,22 @@ if (route('#^/auth$#')) {
 
 if (route('#^/auth/logout$#')) {
     include __DIR__ . '/../auth_logout.php';
+    exit(0);
+}
+
+if (route('#^/pools/(?P<slug>.+)$#', $matches)) {
+    include __DIR__ . '/../pool.php';
+    exit(0);
+}
+
+if (route('#^/pools$#')) {
+    include __DIR__ . '/../pools.php';
+    exit(0);
+}
+
+
+if (route('#^/home$#')) {
+    include __DIR__ . '/../user_home.php';
     exit(0);
 }
 
