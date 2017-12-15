@@ -17,6 +17,11 @@ class PoolUser extends Model
         return self::fetchAllWhere("pool_id = $1", [$pool_id]);
     }
 
+    public static function findByPoolIdUserId(int $pool_id, int $user_id): ?PoolUser
+    {
+        return self::findWhere("pool_id = $1 AND user_id = $2", [$pool_id, $user_id]);
+    }
+
     public function getUser(): User
     {
         return User::find($this->getData('user_id'));
@@ -25,5 +30,37 @@ class PoolUser extends Model
     public function getDisplayName(): string
     {
         return $this->getUser()->getDisplayName();
+    }
+
+    public function getMatches(int $week_number): array
+    {
+        $sql = <<<SQL
+SELECT
+    m.game_time AS match_time,
+    a.team_id AS away_team_id,
+    a.name AS away_team_name,
+    a.abbreviation AS away_team_abbr,
+    h.team_id AS home_team_id,
+    h.name AS home_team_name,
+    h.abbreviation AS home_team_abbr,
+    p.team_id AS pick_team_id
+FROM matches m
+JOIN teams a ON a.team_id = m.away_team_id
+JOIN teams h ON h.team_id = m.home_team_id
+LEFT JOIN picks p ON p.match_id = m.match_id AND p.pool_user_id = $1
+WHERE m.match_id IN (
+    SELECT match_id
+    FROM match_weeks
+    WHERE week_number = $2
+)
+ORDER BY m.game_time
+SQL;
+        $res = $this->db()->query($sql, [$this->getId(), $week_number]);
+        $matches = [];
+        while ($row = $res->fetchRow()) {
+            $matches[] = $row;
+        }
+
+        return $matches;
     }
 }

@@ -63,6 +63,11 @@ SQL;
        return PoolUser::fetchAllByPoolId($this->getId());
     }
 
+    public function getPoolUser(User $user): ?PoolUser
+    {
+        return PoolUser::findByPoolIdUserId($this->getId(), $user->getId());
+    }
+
     protected function beforeCreate()
     {
         $this->setData(['slug' => $this->generateSlug()]);
