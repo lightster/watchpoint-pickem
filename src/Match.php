@@ -18,4 +18,13 @@ class Match extends Model
     {
         return self::findWhere("blizz_id = $1", [$blizz_id]);
     }
+
+    public static function getNumberOfWeeks(): int
+    {
+        $sql = <<<SQL
+SELECT MAX(week_number)
+FROM match_weeks
+SQL;
+        return (int) self::db()->fetchOne($sql);
+    }
 }

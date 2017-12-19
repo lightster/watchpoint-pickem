@@ -36,6 +36,7 @@ class PoolUser extends Model
     {
         $sql = <<<SQL
 SELECT
+    m.match_id,
     m.game_time AS match_time,
     a.team_id AS away_team_id,
     a.name AS away_team_name,
@@ -62,5 +63,19 @@ SQL;
         }
 
         return $matches;
+    }
+
+    public function pick(int $match_id, int $team_id): Pick
+    {
+        $sql = <<<SQL
+INSERT INTO picks (pool_user_id, match_id, team_id) VALUES ($1, $2, $3)
+ON CONFLICT (pool_user_id, match_id)
+DO UPDATE SET team_id = $3, updated_at = now()
+RETURNING *
+SQL;
+        $row = $this->db()->fetchRow($sql, [$this->getId(), $match_id, $team_id]);
+        $pick = new Pick($row, false);
+
+        return $pick;
     }
 }
