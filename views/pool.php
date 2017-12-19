@@ -45,3 +45,7 @@ Share - <a href="<?= $pool_url ?>"><?= $pool_url ?></a>
         </tr>
     </tbody>
 </table>
+
+<h3>Picks</h3>
+
+<a href="/pools/<?= $pool['slug'] ?>/picks">Make your picks</a>
