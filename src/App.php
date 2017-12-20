@@ -24,8 +24,6 @@ class App
 
     public function run(Closure $configure_func = null)
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         $this->loadEnv();
         $this->option('view', new View);
         $this->option('session_name', 'watchpoint-io');
