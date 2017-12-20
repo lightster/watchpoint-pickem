@@ -31,18 +31,14 @@ Share - <a href="<?= $pool_url ?>"><?= $pool_url ?></a>
         </tr>
     </thead>
     <tbody>
+        <?php foreach ($leaderboard as $rank => $user_score): ?>
         <tr>
-            <td>1</td>
-            <td>zulu#1799</td>
-            <td>2</td>
-            <td>2-0</td>
+            <td><?= $rank + 1 ?></td>
+            <td><?= $user_score['user_display_name'] ?></td>
+            <td><?= $user_score['score'] ?></td>
+            <td><?= $user_score['score'] ?>-<?= $user_score['total'] ?></td>
         </tr>
-        <tr>
-            <td>1</td>
-            <td>lightster#1173</td>
-            <td>2</td>
-            <td>1-1</td>
-        </tr>
+        <?php endforeach ?>
     </tbody>
 </table>
 

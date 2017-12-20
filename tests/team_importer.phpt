@@ -6,6 +6,7 @@ team importer from blizzard api
 $db = require_once __DIR__ . '/db.inc';
 
 $db->query("BEGIN");
+$db->query("DELETE FROM picks");
 $db->query("DELETE FROM matches");
 $db->query("DELETE FROM teams");
 

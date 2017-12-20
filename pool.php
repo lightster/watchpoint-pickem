@@ -28,4 +28,5 @@ $members = array_map(function (PoolUser $pool_user) {
 }, $pool->getUsers());
 sort($members);
 $app->set('members', $members);
+$app->set('leaderboard', $pool->getLeaderboard());
 echo $app->render(__DIR__. '/views/pool.php', __DIR__ . '/views/layout.php');

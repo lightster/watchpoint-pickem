@@ -68,6 +68,38 @@ SQL;
         return PoolUser::findByPoolIdUserId($this->getId(), $user->getId());
     }
 
+    public function getLeaderboard(): array
+    {
+        $sql = <<<SQL
+WITH lboard AS (
+    SELECT pool_user_id, COUNT(*) AS score
+    FROM picks
+    JOIN match_winners USING (match_id, team_id)
+    WHERE pool_user_id IN (
+        SELECT pool_user_id
+        FROM pool_users
+        WHERE pool_id = $1
+    )
+    GROUP BY pool_user_id
+)
+SELECT
+    users.bnet_tag AS user_display_name,
+    lboard.score,
+    (SELECT COUNT(*) AS total FROM match_winners) AS total
+FROM lboard
+JOIN pool_users USING (pool_user_id)
+JOIN users USING (user_id)
+ORDER BY lboard.score DESC
+SQL;
+        $res = $this->db()->query($sql, [$this->getId()]);
+        $lboard = [];
+        while ($row = $res->fetchRow()) {
+            $lboard[] = $row;
+        }
+
+        return $lboard;
+    }
+
     protected function beforeCreate()
     {
         $this->setData(['slug' => $this->generateSlug()]);
