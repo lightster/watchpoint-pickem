@@ -1,7 +1,7 @@
 <a href="/pools/<?= $pool['slug'] ?>">&larr; Back to Pool</a>
 <h3>Make your Picks</h3>
 <form action="/pools/<?= $pool['slug'] ?>/picks" method="get">
-    <div class="form-group col-2">
+    <div class="form-group col-3 col-md-2">
     <label for="week">Week</label>
     <select name="w" class="form-control week-selector-js" id="week">
     <?php foreach(range(1, $number_of_weeks) as $week): ?>
