@@ -28,6 +28,11 @@ function route(string $pattern, array &$matches = null)
     return false;
 }
 
+if (route('#^/logo/(?P<team_id>.+).svg$#', $matches)) {
+    include __DIR__ . '/../team_logo.php';
+    exit(0);
+}
+
 if (route('#^/user$#')) {
     include __DIR__ . '/../user.php';
     exit(0);
@@ -43,6 +48,11 @@ if (route('#^/auth/logout$#')) {
     exit(0);
 }
 
+if (route('#^/pools/(?P<slug>.+)/picks$#', $matches)) {
+    include __DIR__ . '/../picks.php';
+    exit(0);
+}
+
 if (route('#^/pools/(?P<slug>.+)$#', $matches)) {
     include __DIR__ . '/../pool.php';
     exit(0);
@@ -52,7 +62,6 @@ if (route('#^/pools$#')) {
     include __DIR__ . '/../pools.php';
     exit(0);
 }
-
 
 if (route('#^/home$#')) {
     include __DIR__ . '/../user_home.php';
