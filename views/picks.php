@@ -13,11 +13,12 @@
 </form>
 
 <?php foreach ($matches as $match): ?>
+<hr>
 <div class="container p-0">
     <div class="row">
         <div class="col">
-        <span class="text-muted"><?= date('F j', strtotime($match['match_time'])) ?></span>
-        <?= date('l g:i A', strtotime($match['match_time'])) ?>
+            <span class="match-datetime-js"
+                data-datetime="<?= $match['match_time'] ?>">&nbsp;</span>
         </div>
     </div>
     <div class="row mt-3 mb-3 align-items-center">
@@ -91,6 +92,18 @@ $(function() {
     });
     $('.week-selector-js').on('change', function(e) {
         this.form.submit();
+    });
+
+    $('.match-datetime-js').each(function() {
+        var m_date = new Date($(this).data('datetime'));
+        $(this).html(m_date.toLocaleString(undefined, {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+        }));
     });
 });
 </script>
