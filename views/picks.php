@@ -38,6 +38,9 @@
             Pick
             <?php endif ?>
             </a>
+            <?php if ($match['away_team_id'] == $match['winning_team_id']): ?>
+            <div class="bg-success text-white">Winner</div>
+            <?php endif ?>
         </div>
         <div class="col-2 text-center align-middle">at</div>
         <div class="col-5 text-center align-middle">
@@ -57,6 +60,9 @@
             Pick
             <?php endif ?>
             </a>
+            <?php if ($match['home_team_id'] == $match['winning_team_id']): ?>
+            <div class="bg-success text-white">Winner</div>
+            <?php endif ?>
         </div>
     </div>
 </div>

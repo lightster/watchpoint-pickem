@@ -44,11 +44,13 @@ SELECT
     h.team_id AS home_team_id,
     h.name AS home_team_name,
     h.abbreviation AS home_team_abbr,
-    p.team_id AS pick_team_id
+    p.team_id AS pick_team_id,
+    mw.team_id AS winning_team_id
 FROM matches m
 JOIN teams a ON a.team_id = m.away_team_id
 JOIN teams h ON h.team_id = m.home_team_id
 LEFT JOIN picks p ON p.match_id = m.match_id AND p.pool_user_id = $1
+LEFT JOIN match_winners mw ON mw.match_id = m.match_id
 WHERE m.match_id IN (
     SELECT match_id
     FROM match_weeks
