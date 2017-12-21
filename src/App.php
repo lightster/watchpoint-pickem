@@ -59,7 +59,8 @@ class App
     public function requireLogin()
     {
         if (!isset($_SESSION['user'])) {
-            $this->redirect('/auth');
+            $q = http_build_query(['prev_uri' => $_SERVER['REQUEST_URI']]);
+            $this->redirect("/auth?{$q}");
         }
 
         $this->option('user', function() {

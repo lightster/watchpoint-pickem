@@ -21,6 +21,9 @@ $bnet_auth = new BnetAuth([
     'code'         => $_GET['code'] ?? '',
     'state'        => $_GET['state'] ?? '',
     'auth_handler' => function($auth_url) use ($app) {
+        if (isset($_GET['prev_uri'])) {
+            $_SESSION['prev_uri'] = $_GET['prev_uri'];
+        }
         return $app->redirect($auth_url);
     },
 ]);
@@ -35,7 +38,13 @@ try {
         ]);
     }
     $_SESSION['user'] = $user->getId();
-    $app->redirect('/home');
+    if (!empty($_SESSION['prev_uri'])) {
+        $prev_uri = $_SESSION['prev_uri'];
+        unset($_SESSION['prev_uri']);
+        $app->redirect($prev_uri);
+    } else {
+        $app->redirect('/home');
+    }
 } catch (BnetAuthException $e) {
     $app->redirect('/auth/error');
 }
