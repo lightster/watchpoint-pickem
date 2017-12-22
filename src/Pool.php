@@ -75,21 +75,21 @@ WITH lboard AS (
     SELECT pool_user_id, COUNT(*) AS score
     FROM picks
     JOIN match_winners USING (match_id, team_id)
-    WHERE pool_user_id IN (
-        SELECT pool_user_id
-        FROM pool_users
-        WHERE pool_id = $1
-    )
     GROUP BY pool_user_id
 )
 SELECT
     users.bnet_tag AS user_display_name,
-    lboard.score,
+    COALESCE(lboard.score, 0) AS score,
     (SELECT COUNT(*) AS total FROM match_winners) AS total
-FROM lboard
-JOIN pool_users USING (pool_user_id)
+FROM pool_users
+LEFT JOIN lboard USING (pool_user_id)
 JOIN users USING (user_id)
-ORDER BY lboard.score DESC
+WHERE pool_users.pool_user_id IN (
+    SELECT pool_user_id
+    FROM pool_users
+    WHERE pool_id = $1
+)
+ORDER BY score DESC
 SQL;
         $res = $this->db()->query($sql, [$this->getId()]);
         $lboard = [];
