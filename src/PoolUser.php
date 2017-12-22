@@ -37,7 +37,8 @@ class PoolUser extends Model
         $sql = <<<SQL
 SELECT
     m.match_id,
-    m.game_time AS match_time,
+    m.game_time,
+    (now() >= m.game_time) AS match_started,
     a.team_id AS away_team_id,
     a.name AS away_team_name,
     a.abbreviation AS away_team_abbr,

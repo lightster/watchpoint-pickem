@@ -20,7 +20,7 @@
     <header>
       <div class="navbar navbar-expand bg-dark navbar-dark">
         <div class="container">
-            <a href="<?= (isset($user) ? '/home' : '/') ?>" class="navbar-brand"><img src="/img/logo.svg" width="180"></a>
+            <a href="<?= (isset($user) ? '/home' : '/') ?>" class="navbar-brand"><img src="/img/logo.svg" width="180" height="39"></a>
           <ul class="navbar-nav ml-auto">
             <?php if (isset($user)): ?>
             <li class="nav-item">
