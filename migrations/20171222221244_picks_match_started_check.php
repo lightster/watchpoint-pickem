@@ -16,18 +16,24 @@ SQL;
 $sql = <<<SQL
 CREATE FUNCTION picks_match_started_check() RETURNS trigger AS $$
 DECLARE
-  v_match_time timestamp with time zone;
+    v_match_time timestamp with time zone;
 BEGIN
-    v_match_time := (SELECT game_time FROM matches WHERE match_id = NEW.match_id LIMIT 1);
+    v_match_time := (
+        SELECT game_time
+        FROM matches
+        WHERE match_id = NEW.match_id
+        LIMIT 1
+    );
     IF NEW.updated_at >= v_match_time THEN
-       RAISE EXCEPTION 'cannot make picks after game has started';
+        RAISE EXCEPTION 'cannot make picks after game has started';
     END IF;
 
-        RETURN NEW;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER picks_match_started_check BEFORE INSERT OR UPDATE ON picks
+CREATE TRIGGER picks_match_started_check
+    BEFORE INSERT OR UPDATE ON picks
     FOR EACH ROW EXECUTE PROCEDURE picks_match_started_check();
 SQL;
 
