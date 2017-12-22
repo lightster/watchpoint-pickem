@@ -21,7 +21,9 @@ class Db
         }
 
         if (!$pg_result) {
-            throw new DbException("Failed to run query");
+            $e = new DbException("Failed to run query");
+            $e->setDb($this);
+            throw $e;
         }
 
         $result = new DbResult($pg_result);
@@ -177,6 +179,17 @@ SQL;
         }
 
         return $this->conn;
+    }
+
+    public function getLastError(): string
+    {
+        $last_err = pg_last_error($this->getConn());
+
+        if (!$last_err) {
+            return '';
+        }
+
+        return $last_err;
     }
 
     private static function pgConnStr(string $url, int $conn_timeout = 2): string
