@@ -24,8 +24,10 @@ if ($_POST) {
     exit;
 }
 
-$app->set('selected_week', $_GET['w'] ?? 1);
+$week = $_GET['w'] ?? Match::getNearestWeek();
+
+$app->set('selected_week', $week);
 $app->set('number_of_weeks', Match::getNumberOfWeeks());
 $app->set('pool', $pool->getData());
-$app->set('matches', $pool_user->getMatches($_GET['w'] ?? 1));
+$app->set('matches', $pool_user->getMatches($week));
 echo $app->render(__DIR__. '/views/picks.php', __DIR__ . '/views/layout.php');

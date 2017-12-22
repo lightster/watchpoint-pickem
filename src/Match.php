@@ -27,4 +27,22 @@ FROM match_weeks
 SQL;
         return (int) self::db()->fetchOne($sql);
     }
+
+    public static function getNearestWeek(): int
+    {
+        $sql = <<<SQL
+SELECT week_number
+FROM match_weeks
+WHERE match_id = (
+    SELECT match_id
+    FROM matches
+    WHERE game_time >= now()
+    ORDER BY game_time
+    LIMIT 1
+)
+SQL;
+        $week_num = (int) self::db()->fetchOne($sql);
+
+        return $week_num;
+    }
 }
