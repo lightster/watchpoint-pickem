@@ -27,11 +27,11 @@
             will win each week in the Overwatch League.
           </p>
           <h3 class="mt-5">Top the Leaderboard</h3>
-          <p><img src="/img/watchpoint-leaderboard.png" class="img-fluid"></p>
+          <p><img src="/img/watchpoint-leaderboard.png" class="img-thumbnail img-fluid"></p>
           <h3 class="mt-5">Make Your Picks</h3>
-          <p><img src="/img/watchpoint-picks.png" class="img-fluid"></p>
+          <p><img src="/img/watchpoint-picks.png" class="img-thumbnail img-fluid"></p>
           <h3 class="mt-5">Pick the Winner</h3>
-          <p><img src="/img/watchpoint-picks-winners.png" class="img-fluid"></p>
+          <p><img src="/img/watchpoint-picks-winners.png" class="img-thumbnail img-fluid"></p>
         </div>
     </div>
   </body>
