@@ -7,7 +7,7 @@ $app->run(function () {
 
 // Already logged in
 if (!empty($_SESSION['user'])) {
-    $app->redirect('/user');
+    $app->redirect('/home');
 }
 
 $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? 'https';
