@@ -18,53 +18,29 @@
     <div class="row">
         <div class="col">
             <span class="match-datetime-js"
-                data-datetime="<?= $match['match_time'] ?>">&nbsp;</span>
+                data-datetime="<?= $match['game_time'] ?>">&nbsp;</span>
         </div>
     </div>
     <div class="row mt-3 mb-3 align-items-center">
-        <div class="col-5 text-center align-middle">
-            <img src="/logo/<?= $match['away_team_id'] ?>.svg" width="50"><br>
-            <div class="d-block d-sm-none">
-                <?= $match['away_team_abbr'] ?>
-            </div>
-            <div class="d-none d-sm-block">
-                <?= $match['away_team_name'] ?>
-            </div>
-            <a href="javascript:;" class="team-pick-js"
-                data-team_id="<?= $match['away_team_id'] ?>"
-                data-match_id="<?= $match['match_id'] ?>">
-            <?php if ($match['away_team_id'] === $match['pick_team_id']): ?>
-            Picked
-            <?php else: ?>
-            Pick
-            <?php endif ?>
-            </a>
-            <?php if ($match['away_team_id'] == $match['winning_team_id']): ?>
-            <div class="bg-success text-white">Winner</div>
-            <?php endif ?>
-        </div>
+        <?= $this->partial(__DIR__ . '/_pick_team.php', [
+            'abbr'            => $match['away_team_abbr'],
+            'name'            => $match['away_team_name'],
+            'team_id'         => $match['away_team_id'],
+            'match_id'        => $match['match_id'],
+            'match_started'   => $match['match_started'],
+            'pick_team_id'    => $match['pick_team_id'],
+            'winning_team_id' => $match['winning_team_id'],
+        ]) ?>
         <div class="col-2 text-center align-middle">at</div>
-        <div class="col-5 text-center align-middle">
-            <img src="/logo/<?= $match['home_team_id'] ?>.svg" width="50"><br>
-            <div class="d-block d-sm-none">
-                <?= $match['home_team_abbr'] ?>
-            </div>
-            <div class="d-none d-sm-block">
-                <?= $match['home_team_name'] ?>
-            </div>
-            <a href="javascript:;" class="team-pick-js"
-                data-team_id="<?= $match['home_team_id'] ?>"
-                data-match_id="<?= $match['match_id'] ?>">
-            <?php if ($match['home_team_id'] === $match['pick_team_id']): ?>
-            Picked
-            <?php else: ?>
-            Pick
-            <?php endif ?>
-            </a>
-            <?php if ($match['home_team_id'] == $match['winning_team_id']): ?>
-            <div class="bg-success text-white">Winner</div>
-            <?php endif ?>
-        </div>
+        <?= $this->partial(__DIR__ . '/_pick_team.php', [
+            'abbr'            => $match['home_team_abbr'],
+            'name'            => $match['home_team_name'],
+            'team_id'         => $match['home_team_id'],
+            'match_id'        => $match['match_id'],
+            'match_started'   => $match['match_started'],
+            'pick_team_id'    => $match['pick_team_id'],
+            'winning_team_id' => $match['winning_team_id'],
+        ]) ?>
     </div>
 </div>
 <?php endforeach ?>
