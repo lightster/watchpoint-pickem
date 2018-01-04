@@ -1,0 +1,19 @@
+html, body {
+  background: #333;
+}
+.wpt-dark {
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+}
+
+.wpt-light {
+  background: #fff;
+  text-align: center;
+}
+
+.wpt-light h3 {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #444;
+}
