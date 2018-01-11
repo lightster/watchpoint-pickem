@@ -37,6 +37,8 @@ class MatchImporter
         $blizz_match_id = (int) $match_data['id'];
         $match = Match::findByBlizzId($blizz_match_id);
         if ($match) {
+            $match->setData(['game_time' => $match_data['startDate']]);
+            $match->save();
             return $match;
         }
 
@@ -53,7 +55,7 @@ class MatchImporter
             'blizz_id'     => $blizz_match_id,
             'away_team_id' => $away_team->getId(),
             'home_team_id' => $home_team->getId(),
-            'game_time'    => $match_data['endDate'],
+            'game_time'    => $match_data['startDate'],
         ]);
 
         return $match;
