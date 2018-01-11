@@ -24,6 +24,8 @@ class App
 
     public function run(Closure $configure_func = null)
     {
+        ob_start();
+
         $this->loadEnv();
         $this->option('view', new View);
         $this->option('session_name', 'watchpoint-io');
