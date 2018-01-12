@@ -80,7 +80,12 @@ WITH lboard AS (
 SELECT
     users.bnet_tag AS user_display_name,
     COALESCE(lboard.score, 0) AS score,
-    (SELECT COUNT(*) AS total FROM match_winners) AS total
+    (
+        SELECT COUNT(*) AS total
+        FROM match_winners
+        JOIN matches USING (match_id)
+        WHERE matches.game_time >= $2
+    ) AS total
 FROM pool_users
 LEFT JOIN lboard USING (pool_user_id)
 JOIN users USING (user_id)
@@ -91,7 +96,7 @@ WHERE pool_users.pool_user_id IN (
 )
 ORDER BY score DESC
 SQL;
-        $res = $this->db()->query($sql, [$this->getId()]);
+        $res = $this->db()->query($sql, [$this->getId(), $this->getData('created_at')]);
         $lboard = [];
         while ($row = $res->fetchRow()) {
             $lboard[] = $row;
