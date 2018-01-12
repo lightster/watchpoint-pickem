@@ -103,7 +103,7 @@ WHERE pool_users.pool_user_id IN (
     FROM pool_users
     WHERE pool_id = $1
 )
-ORDER BY score DESC NULLS LAST
+ORDER BY score DESC NULLS LAST, user_display_name
 SQL;
         $res = $this->db()->query($sql, [$this->getId(), $this->getData('created_at')]);
         $lboard = [];
