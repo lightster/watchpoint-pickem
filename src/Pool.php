@@ -72,14 +72,23 @@ SQL;
     {
         $sql = <<<SQL
 WITH lboard AS (
-    SELECT pool_user_id, COUNT(*) AS score
+    SELECT
+        pool_user_id,
+        COUNT(*) AS score,
+        dense_rank() OVER (ORDER BY COUNT(*) DESC) AS lb_rank
     FROM picks
     JOIN match_winners USING (match_id, team_id)
+    WHERE pool_user_id IN (
+        SELECT pool_user_id
+        FROM pool_users
+        WHERE pool_id = $1
+    )
     GROUP BY pool_user_id
 )
 SELECT
     users.bnet_tag AS user_display_name,
-    COALESCE(lboard.score, 0) AS score,
+    lboard.lb_rank,
+    lboard.score AS score,
     (
         SELECT COUNT(*) AS total
         FROM match_winners
@@ -94,7 +103,7 @@ WHERE pool_users.pool_user_id IN (
     FROM pool_users
     WHERE pool_id = $1
 )
-ORDER BY score DESC
+ORDER BY score DESC NULLS LAST
 SQL;
         $res = $this->db()->query($sql, [$this->getId(), $this->getData('created_at')]);
         $lboard = [];

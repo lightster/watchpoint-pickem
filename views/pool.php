@@ -25,12 +25,16 @@ Share - <a href="<?= $pool_url ?>"><?= $pool_url ?></a>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($leaderboard as $rank => $user_score): ?>
+        <?php foreach ($leaderboard as $user_score): ?>
         <tr>
-            <td><?= $rank + 1 ?></td>
+            <td><?= $user_score['lb_rank'] ?: '-' ?></td>
             <td><?= $user_score['user_display_name'] ?></td>
-            <td><?= $user_score['score'] ?></td>
+            <td><?= $user_score['score'] ?: '-' ?></td>
+            <?php if ($user_score['score'] !== null): ?>
             <td><?= $user_score['score'] ?>-<?= $user_score['total'] ?></td>
+            <?php else: ?>
+            <td>-</td>
+            <?php endif ?>
         </tr>
         <?php endforeach ?>
     </tbody>
