@@ -26,7 +26,7 @@ $app->set('user_has_joined', $pool->userHasJoined($app->option('user')));
 $members = array_map(function (PoolUser $pool_user) {
     return $pool_user->getDisplayName();
 }, $pool->getUsers());
-sort($members);
+sort($members, SORT_NATURAL | SORT_FLAG_CASE);
 $app->set('members', $members);
 $app->set('leaderboard', $pool->getLeaderboard());
 echo $app->render(__DIR__. '/views/pool.php', __DIR__ . '/views/layout.php');
