@@ -59,9 +59,9 @@ $(function() {
             $('.team-pick-js[data-match_id=' + match_id + ']').each(function() {
                 var e_team_id = $(this).data('team_id');
                 if (e_team_id == team_id) {
-                    $(this).html('Picked');
+                    $(this).html('Picked').addClass('bg-primary text-white');
                 } else {
-                    $(this).html('Pick');
+                    $(this).html('Pick').removeClass('bg-primary text-white');
                 }
             });
         });

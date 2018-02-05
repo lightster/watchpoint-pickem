@@ -8,12 +8,14 @@
     </div>
     <div class="team-pick-container-js">
         <?php if ($match_started == 'f'): ?>
-        <a href="javascript:;" class="team-pick-js"
+        <a href="javascript:;"
+            class="team-pick-js<?= $team_id == $pick_team_id
+                ? " bg-primary text-white" : "" ?>"
             data-team_id="<?= $team_id ?>"
             data-match_id="<?= $match_id ?>"><?= $team_id == $pick_team_id ?
             "Picked" : "Pick" ?></a>
         <?php elseif ($team_id == $pick_team_id): ?>
-        Picked
+        <div class="bg-primary text-white">Picked</div>
         <?php endif ?>
     </div>
     <?php if ($team_id == $winning_team_id): ?>
