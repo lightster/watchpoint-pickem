@@ -60,3 +60,7 @@ footer p {
 .team-pick-js {
   display: block;
 }
+
+.team-pick-container-js, .team-pick-winner {
+  margin-bottom: .1rem;
+}

@@ -19,6 +19,6 @@
         <?php endif ?>
     </div>
     <?php if ($team_id == $winning_team_id): ?>
-    <div class="bg-success text-white">Winner</div>
+    <div class="team-pick-winner bg-success text-white">Winner</div>
     <?php endif ?>
 </div>
