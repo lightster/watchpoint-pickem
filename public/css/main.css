@@ -57,3 +57,10 @@ footer p {
   margin-bottom: .25rem;
 }
 
+.team-pick-js {
+  display: block;
+}
+
+.team-pick-container-js, .team-pick-winner {
+  margin-bottom: .1rem;
+}
